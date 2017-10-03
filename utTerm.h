@@ -17,7 +17,7 @@ TEST (Number, symbol) {
 //?- 25=25.
 //true.
 TEST (Number, matchSuccess) {
-  Number twentyfive1("twentyfive", 25);
+  Number twentyfive1(25);
   Number twentyfive2("twentyfive", 25);
   ASSERT_TRUE(twentyfive1.match(&twentyfive2));
 }
