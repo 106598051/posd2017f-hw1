@@ -1,16 +1,19 @@
-#ifndef ATOM_H
-#define ATOM_H
+#ifndef NUMBER_H
+#define NUMBER_H
 
 #include <string>
 #include "Variable.h"
 
 using std::string;
 
-class Number;
+class Atom;
 
-class Atom {
+class Number {
 public:
-  Atom (string s):_symbol(s) {}
+  Number(string name, int value):_symbol(name), _value(value){}
+  string value(){
+    return std::to_string(_value);
+  }
   string symbol(){
     return _symbol;
   }
@@ -22,29 +25,36 @@ public:
     return MATCH_FAILURE_DIFF_CONSTANT;
   }
   bool match(int const i){
-    return MATCH_FAILURE_DIFF_CONSTANT;
+    return matching(&i);
   }
   bool match(Number *number){
-    return MATCH_FAILURE_DIFF_CONSTANT;
+    return matching(&number->_value);
   }
   bool match(Atom *atom){
-    return (_symbol == atom->symbol());
+    return MATCH_FAILURE_DIFF_CONSTANT;
   }
   bool match(Variable *variable){
     bool ret = false;
     if(variable->assignable()){
-      variable->match(_symbol);
+      variable->match(value());
       ret = true;
     }
     else{
-      ret = (_symbol == variable->value());
+      ret = (value() == variable->value());
     }
     return ret;
   }
 private:
   bool MATCH_FAILURE_DIFF_CONSTANT = false;
-  //bool MATCH_SUCCESS_TO_VAR = true;
   string _symbol;
+  int _value;
+  bool matching(int const *i) {
+    bool matched = false;
+    if(_value == *i){
+      matched = true;
+    }
+    return matched;
+  }
 };
 
 #endif
