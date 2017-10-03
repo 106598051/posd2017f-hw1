@@ -18,5 +18,5 @@ ifeq (${OS}, Windows_NT)
 else
 	rm -f *.o hw2
 endif
-stat:
-	wc *.h *.cpp
+#stat:
+	#wc *.h *.cpp
