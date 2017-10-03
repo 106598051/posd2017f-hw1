@@ -1,6 +1,6 @@
 #ifndef UTATOM_H
 #define UTATOM_H
-#include "Atom.h"
+#include "atom.h"
 
 TEST(Atom, first) {
   ASSERT_TRUE(true);

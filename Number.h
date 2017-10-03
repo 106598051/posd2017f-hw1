@@ -2,7 +2,7 @@
 #define NUMBER_H
 
 #include <string>
-#include "Variable.h"
+#include "variable.h"
 
 using std::string;
 

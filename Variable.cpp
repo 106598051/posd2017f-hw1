@@ -1,6 +1,6 @@
-#include "Variable.h"
-#include "Atom.h"
-#include "Number.h"
+#include "variable.h"
+#include "atom.h"
+#include "number.h"
 using std::string;
 
 Variable::Variable(string s):_symbol(s){}
