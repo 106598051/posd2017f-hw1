@@ -15,6 +15,8 @@ public:
   string match(string s);
   string match(Atom *atom);
   string match(Number *number);
+  bool match(Atom& atom);
+  bool match(Number& number);
   bool assignable();
 
 private:

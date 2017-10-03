@@ -45,6 +45,23 @@ public:
     }
     return ret;
   }
+  bool match(Number& number){
+    return matching(&number._value);
+  }
+  bool match(Atom& atom){
+    return MATCH_FAILURE_DIFF_CONSTANT;
+  }
+  bool match (Variable& variable){
+    bool ret = false;
+    if(variable.assignable()){
+      variable.match(value());
+      ret = true;
+    }
+    else{
+      ret = (value() == variable.value());
+    }
+    return ret;
+  }
 private:
   bool MATCH_FAILURE_DIFF_CONSTANT = false;
   string _symbol;

@@ -41,6 +41,23 @@ public:
     }
     return ret;
   }
+  bool match(Atom& atom){
+    return (_symbol == atom._symbol);
+  }
+  bool match(Number &number){
+    return MATCH_FAILURE_DIFF_CONSTANT;
+  }
+  bool match(Variable& variable){
+    bool ret = false;
+    if(variable.assignable()){
+      variable.match(_symbol);
+      ret = true;
+    }
+    else{
+      ret = (_symbol == variable.value());
+    }
+    return ret;
+  }
 private:
   bool MATCH_FAILURE_DIFF_CONSTANT = false;
   //bool MATCH_SUCCESS_TO_VAR = true;

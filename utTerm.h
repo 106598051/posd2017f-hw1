@@ -20,6 +20,7 @@ TEST (Number, matchSuccess) {
   Number twentyfive1(25);
   Number twentyfive2("twentyfive", 25);
   ASSERT_TRUE(twentyfive1.match(&twentyfive2));
+  EXPECT_TRUE(twentyfive1.match(twentyfive2));
 }
 //?- 25=0.
 //false.
@@ -66,6 +67,7 @@ TEST (Atom, matchSuccessToVarInstantedToDiffConstant) {
   Atom tom("tom");
   EXPECT_EQ("X = tom", X.match(&tom));
   ASSERT_TRUE(tom.match(&X));
+  EXPECT_TRUE(tom.match(X));
 }
 
 // ?- X=jerry, tom=X.
@@ -76,6 +78,7 @@ TEST (Atom, matchFailureToVarInstantedToDiffConstant) {
   Atom tom("tom");
   EXPECT_EQ("X = jerry", X.match(&jerry));
   ASSERT_FALSE(tom.match(&X));
+  EXPECT_FALSE(tom.match(jerry));
 }
 
 // ?- X = 5.
@@ -84,6 +87,7 @@ TEST (Var, matchSuccessToNumber) {
   Variable X("X");
   Number five("five", 5);
   ASSERT_EQ("X = 5", X.match(&five));
+  EXPECT_TRUE(five.match(X));
 }
 
 // ?- X=25, X= 100.
@@ -94,6 +98,8 @@ TEST (Var, matchFailureToTwoDiffNumbers) {
   Number hundred("hundred", 100);
   EXPECT_EQ("X = 25", X.match(&twentyfive));
   ASSERT_EQ("false", X.match(&hundred));
+  ASSERT_TRUE(X.match(twentyfive));
+  ASSERT_FALSE(X.match(hundred));
 }
 
 // ?- X=tom, X= 25.

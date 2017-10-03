@@ -35,6 +35,20 @@ string Variable::match(Number *number){
   }*/
   return ret;
 }
+bool Variable::match(Atom& atom){
+  bool ret = false;
+  if(assign(atom.symbol()) || (_value == atom.symbol())){
+    ret = true;
+  }
+  return ret;
+}
+bool Variable::match(Number& number){
+  bool ret = false;
+  if(assign(number.value()) || (_value == number.value())){
+    ret = true;
+  }
+  return ret;
+}
 bool Variable::assignable(){
   return _assignable;
 }
