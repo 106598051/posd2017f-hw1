@@ -11,6 +11,7 @@ class Atom;
 class Number {
 public:
   Number(string name, int value):_symbol(name), _value(value){}
+  Number(int value):_symbol(std::to_string(value)), _value(value){}
   string value(){
     return std::to_string(_value);
   }
