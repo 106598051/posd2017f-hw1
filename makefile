@@ -8,10 +8,10 @@ else
 endif
 
 mainTerm.o: mainTerm.cpp utTerm.h
-	g++ -std=c++11 -c mainTerm.cpp
+	g++ --std=c++11 -c mainTerm.cpp
 
 variable.o: variable.cpp variable.h
-	g++ -std=c++11 -c variable.cpp
+	g++ --std=c++11 -c variable.cpp
 
 clean:
 ifeq (${OS}, Windows_NT)
