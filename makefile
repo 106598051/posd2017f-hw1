@@ -9,7 +9,6 @@ endif
 
 mainTerm.o: mainTerm.cpp utTerm.h
 	g++ --std=c++11 -c mainTerm.cpp
-
 variable.o: variable.cpp variable.h
 	g++ --std=c++11 -c variable.cpp
 
@@ -19,5 +18,5 @@ ifeq (${OS}, Windows_NT)
 else
 	rm -f *.o hw2
 endif
-stat:
-	wc *.h *.cpp
+#stat:
+	#wc *.h *.cpp
