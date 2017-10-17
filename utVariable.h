@@ -67,11 +67,26 @@ TEST (Variable, num1_to_varZ_to_varY_to_varX) {
   Variable X("X");
   Variable Y("Y");
   Variable Z("Z");
+  Variable W("W");
   EXPECT_TRUE(X.match(Y));
+  X.assignedList();
+  Y.assignedList();
+  Z.assignedList();
+  W.assignedList();
   EXPECT_TRUE(Y.match(Z));
+  X.assignedList();
+  Y.assignedList();
+  Z.assignedList();
+  W.assignedList();
+  EXPECT_TRUE(W.match(Z));
+  X.assignedList();
+  Y.assignedList();
+  Z.assignedList();
+  W.assignedList();
   EXPECT_TRUE(Z.match(one));
-  std::cout<< "X=" << X.value() << "Y=" << Y.value() << "Z=" << Z.value() <<std::endl;
   ASSERT_EQ("1", X.value());
+  ASSERT_EQ("1", Y.value());
+  ASSERT_EQ("1", Z.value());
 
 }
 

@@ -2,6 +2,7 @@
 #define VARIABLE_H
 
 #include <string>
+#include <list>
 #include "term.h"
 
 using std::string;
@@ -11,11 +12,12 @@ class Number;
 
 class Variable : public Term{
 public:
+  std::list<Variable *> assignedVariables;
+
   Variable(string s);
   string symbol() const;
   string value();
-
-  //string match(string s);
+  string match(string s);
   string match(Atom *atom);
   string match(Number *number);
   bool match(Atom& atom);
@@ -23,6 +25,7 @@ public:
   bool match(Variable& variable);
   //string& referenceOfValue();
   bool assignable();
+  void assignedList();
 
 private:
   string _value;
