@@ -2,7 +2,7 @@ all: hw3
 
 hw3: mainTerm.o variable.o atom.o number.o
 ifeq (${OS}, Windows_NT)
-	g++ -o hw3 mainTerm.o variable.o atom.o -lgtest
+	g++ -o hw3 mainTerm.o variable.o atom.o number.o -lgtest
 else
 	g++ -o hw3 mainTerm.o variable.o atom.o number.o -lgtest -lpthread
 endif
