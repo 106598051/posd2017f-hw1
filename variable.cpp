@@ -23,10 +23,10 @@ string Variable::value() const{
     */
     return vectorOfTerm[0]->value();
   }
-  else if(_value == "" && assignedVariables.size() > 0){
+  else if(_assignable && assignedVariables.size() > 0){
     return assignedVariables.front()->symbol();
   }
-  else if(_value == "" ){
+  else if(_assignable){
     return _symbol;
   }
   //std::cout << _symbol << ":_value="<<_value << '\n';
@@ -77,37 +77,48 @@ bool Variable::match(Variable& variable){
   if(this == &variable){
     ret = true;
   }
-  else if(_assignable && variable.assignable()){
-    for(auto const& i : assignedVariables){
-      i->assignedVariables.push_back(&variable);
-      i->assignedVariables.insert(
-        i->assignedVariables.end(),
+  else if(_assignable){
+    if(variable.assignable()){
+      for(auto const& i : assignedVariables){
+        i->assignedVariables.push_back(&variable);
+        i->assignedVariables.insert(
+          i->assignedVariables.end(),
+          variable.assignedVariables.begin(),
+          variable.assignedVariables.end()
+        );
+      }
+      for(auto const& i : variable.assignedVariables){
+        i->assignedVariables.push_back(this);
+        i->assignedVariables.insert(
+          i->assignedVariables.end(),
+          assignedVariables.begin(),
+          assignedVariables.end()
+        );
+      }
+      std::list<Variable *> tempList = assignedVariables;
+      assignedVariables.push_front(&variable);
+      assignedVariables.insert(
+        assignedVariables.end(),
+        variable.assignedVariables.begin(),
+        variable.assignedVariables.end()
+      );
+      variable.assignedVariables.push_front(this);
+      variable.assignedVariables.insert(
+        variable.assignedVariables.end(),
+        tempList.begin(),
+        tempList.end()
+      );
+      ret = true;
+    }
+    else{
+      ret = assign(variable.value());
+      assignedVariables.push_front(&variable);
+      assignedVariables.insert(
+        assignedVariables.end(),
         variable.assignedVariables.begin(),
         variable.assignedVariables.end()
       );
     }
-    for(auto const& i : variable.assignedVariables){
-      i->assignedVariables.push_back(this);
-      i->assignedVariables.insert(
-        i->assignedVariables.end(),
-        assignedVariables.begin(),
-        assignedVariables.end()
-      );
-    }
-    std::list<Variable *> tempList = assignedVariables;
-    assignedVariables.push_front(&variable);
-    assignedVariables.insert(
-      assignedVariables.end(),
-      variable.assignedVariables.begin(),
-      variable.assignedVariables.end()
-    );
-    variable.assignedVariables.push_front(this);
-    variable.assignedVariables.insert(
-      variable.assignedVariables.end(),
-      tempList.begin(),
-      tempList.end()
-    );
-    ret = true;
   }
   else if(!_assignable && !variable.assignable()){
     ret = assign(variable.value());
