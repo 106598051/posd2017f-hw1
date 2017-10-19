@@ -8,6 +8,7 @@ using std::string;
 
 Variable::Variable(string s){
   _symbol = s;
+  _value = s;
 }
 
 string Variable::symbol() const{
@@ -25,10 +26,10 @@ string Variable::value() const{
   }
   else if(_assignable && assignedVariables.size() > 0){
     return assignedVariables.front()->symbol();
-  }
+  }/*
   else if(_assignable){
     return _symbol;
-  }
+  }*/
   //std::cout << _symbol << ":_value="<<_value << '\n';
   return _value;
 }
@@ -79,6 +80,7 @@ bool Variable::match(Variable& variable){
   }
   else if(_assignable){
     if(variable.assignable()){
+      _value = variable.symbol();
       for(auto const& i : assignedVariables){
         i->assignedVariables.push_back(&variable);
         i->assignedVariables.insert(
