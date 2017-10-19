@@ -150,9 +150,10 @@ bool Variable::match(Struct& s){
   bool ret = false;
   if(_assignable){
     vectorOfTerm.push_back(&s);
+    ret = true;
   }
   else{
-    ret = value() == s.value();
+    ret = (value() == s.value());
     /*
     for(int i = 0; i < s.sizeOfArgs(); i++){
       if(_value == s.args(i)->value() || assignAsVariable == s.args(i)->symbol()){
