@@ -152,12 +152,14 @@ bool Variable::match(Struct& s){
     vectorOfTerm.push_back(&s);
   }
   else{
+    ret = value() == s.value();
+    /*
     for(int i = 0; i < s.sizeOfArgs(); i++){
       if(_value == s.args(i)->value() || assignAsVariable == s.args(i)->symbol()){
         ret = true;
         break;
       }
-    }
+    }*/
   }
   /*
   if(assign(s.symbol()) || (_value == s.symbol())){
