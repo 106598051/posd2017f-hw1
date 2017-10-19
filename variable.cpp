@@ -121,7 +121,17 @@ bool Variable::match(Variable& variable){
 
 bool Variable::match(Struct& s){
   bool ret = false;
-  vectorOfTerm.push_back(&s);
+  if(_assignable){
+    vectorOfTerm.push_back(&s);
+  }
+  else{
+    for(int i = 0; i < s.sizeOfArgs(); i++){
+      if(_value == s.args(i)->value()){
+        ret = true;
+        break;
+      }
+    }
+  }
   /*
   if(assign(s.symbol()) || (_value == s.symbol())){
     ret = true;
