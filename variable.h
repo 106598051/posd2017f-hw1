@@ -36,6 +36,7 @@ private:
   string* pointerOfAddress = &addressOfValue;
   bool _assignable = true;
   bool assign(string s);
+  string assignAsVariable = "";
 };
 
 #endif

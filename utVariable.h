@@ -87,8 +87,8 @@ TEST (Variable, num1_to_varZ_to_varY_to_varX) {
   EXPECT_EQ("X", X.value());
   EXPECT_EQ("Y", Y.value());
   EXPECT_TRUE(X.match(Y));
-  //EXPECT_EQ("Y", X.value());
-  //EXPECT_EQ("X", Y.value());
+  EXPECT_EQ("Y", X.value());
+  EXPECT_EQ("Y", Y.value());
   EXPECT_TRUE(Y.match(Z));
   EXPECT_TRUE(Z.match(one));
   ASSERT_EQ("1", X.value());

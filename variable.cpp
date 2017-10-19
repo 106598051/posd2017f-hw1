@@ -9,6 +9,7 @@ using std::string;
 Variable::Variable(string s){
   _symbol = s;
   _value = s;
+  assignAsVariable = s;
 }
 
 string Variable::symbol() const{
@@ -25,11 +26,16 @@ string Variable::value() const{
     return vectorOfTerm[0]->value();
   }
   else if(_assignable){
-    return _symbol;
-  }
+    if(assignAsVariable == _symbol){
+      return _symbol;
+    }
+    else{
+      return assignAsVariable;
+    }
+  }/*
   else if(_assignable && assignedVariables.size() > 0){
     return assignedVariables.front()->symbol();
-  }/*
+  }
   else if(_assignable){
     return _symbol;
   }*/
@@ -83,7 +89,9 @@ bool Variable::match(Variable& variable){
   }
   else if(_assignable){
     if(variable.assignable()){
-      _value = variable.symbol();
+      if(assignAsVariable == _symbol){
+        assignAsVariable = variable.symbol();
+      }
       for(auto const& i : assignedVariables){
         i->assignedVariables.push_back(&variable);
         i->assignedVariables.insert(
@@ -127,12 +135,12 @@ bool Variable::match(Variable& variable){
   }
   else if(!_assignable && !variable.assignable()){
     ret = assign(variable.value());
-  }
+  }/*
   else if(_assignable){
     _value = variable.value();
     ret = true;
-  }
-  else if(variable.assignable()){
+  }*/
+  else if(!_assignable && variable.assignable()){
     ret = variable.match(*this);
   }
   return ret;
@@ -145,7 +153,7 @@ bool Variable::match(Struct& s){
   }
   else{
     for(int i = 0; i < s.sizeOfArgs(); i++){
-      if(_value == s.args(i)->value()){
+      if(_value == s.args(i)->value() || assignAsVariable == s.args(i)->symbol()){
         ret = true;
         break;
       }
