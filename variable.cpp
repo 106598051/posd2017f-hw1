@@ -24,6 +24,9 @@ string Variable::value() const{
     */
     return vectorOfTerm[0]->value();
   }
+  else if(_assignable){
+    return _symbol;
+  }
   else if(_assignable && assignedVariables.size() > 0){
     return assignedVariables.front()->symbol();
   }/*
