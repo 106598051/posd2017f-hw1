@@ -38,44 +38,16 @@ string Number::value() const{
   buffer << _value;
   return buffer.str();
 }
-/*
-bool Number::match(string const s){
-  return MATCH_FAILURE_DIFF_CONSTANT;
-}
-
-bool Number::match(int const i){
-  return matching(&i);
-}
-
-bool Number::match(Number *number){
-  return matching(&number->_value);
-}
-
-bool Number::match(Atom *atom){
-  return MATCH_FAILURE_DIFF_CONSTANT;
-}
-
-bool Number::match(Variable *variable){
-  bool ret = false;
-  if(variable->assignable()){
-    variable->match(value());
-    ret = true;
-  }
-  else{
-    ret = (value() == variable->value());
-  }
-  return ret;
-}
 
 bool Number::match(Number& number){
-  return matching(&number._value);
+  return _value == number._value;
 }
 
 bool Number::match(Atom& atom){
   return MATCH_FAILURE_DIFF_CONSTANT;
 }
 
-bool Number::match (Variable& variable){
+bool Number::match(Variable& variable){
   bool ret = false;
   if(variable.assignable()){
     variable.match(value());
@@ -86,7 +58,7 @@ bool Number::match (Variable& variable){
   }
   return ret;
 }
-
+/*
 bool Number::matching(int const *i) {
   bool matched = false;
   if(_value == *i){
