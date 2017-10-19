@@ -23,6 +23,9 @@ string Variable::value() const{
     */
     return vectorOfTerm[0]->value();
   }
+  else if(_value == ""){
+    return _symbol;
+  }
   //std::cout << _symbol << ":_value="<<_value << '\n';
   return _value;
 }
