@@ -36,6 +36,7 @@ bool Atom::match(Variable *variable){
   }
   return ret;
 }
+*/
 bool Atom::match(Atom& atom){
   return (_symbol == atom._symbol);
 }
@@ -53,4 +54,3 @@ bool Atom::match(Variable& variable){
   }
   return ret;
 }
-*/

@@ -3,6 +3,7 @@
 #include "variable.h"
 #include "atom.h"
 #include "number.h"
+#include "struct.h"
 using std::string;
 
 Variable::Variable(string s){
@@ -13,7 +14,16 @@ string Variable::symbol() const{
   return _symbol;
 }
 
-string Variable::value(){
+string Variable::value() const{
+  if(vectorOfTerm.size() > 0){
+    /*
+    for(int i = 0; i < vectorOfTerm.size(); i++){
+      return vectorOfTerm[i]->value();
+    }
+    */
+    return vectorOfTerm[0]->value();
+  }
+  //std::cout << _symbol << ":_value="<<_value << '\n';
   return _value;
 }
 
@@ -57,47 +67,40 @@ bool Variable::match(Number& number){
 
 bool Variable::match(Variable& variable){
   bool ret = false;
-  if(_assignable && variable.assignable()){
+
+  if(this == &variable){
+    ret = true;
+  }
+  else if(_assignable && variable.assignable()){
     for(auto const& i : assignedVariables){
-      i->assignedList();
-      std::cout<<" => ";
       i->assignedVariables.push_back(&variable);
       i->assignedVariables.insert(
         i->assignedVariables.end(),
         variable.assignedVariables.begin(),
         variable.assignedVariables.end()
       );
-      i->assignedList();
-      std::cout<<"\n";
     }
-    for(auto const& i : assignedVariables){
-      i->assignedList();
-      std::cout<<" => ";
+    for(auto const& i : variable.assignedVariables){
       i->assignedVariables.push_back(this);
       i->assignedVariables.insert(
         i->assignedVariables.end(),
         assignedVariables.begin(),
         assignedVariables.end()
       );
-      i->assignedList();
-      std::cout<<"\n";
-      //std::cout<<"Add "<< i->symbol() <<" to list of "<<variable.symbol()<<std::endl;
     }
     std::list<Variable *> tempList = assignedVariables;
+    assignedVariables.push_back(&variable);
     assignedVariables.insert(
       assignedVariables.end(),
       variable.assignedVariables.begin(),
       variable.assignedVariables.end()
     );
-    //std::cout<<"Add "<< variable.symbol() <<" to list of "<<symbol()<<std::endl;
+    variable.assignedVariables.push_back(this);
     variable.assignedVariables.insert(
       variable.assignedVariables.end(),
       tempList.begin(),
       tempList.end()
     );
-    //std::cout<<"Add "<< symbol() <<" to list of "<<variable.symbol()<<std::endl;
-    assignedVariables.push_back(&variable);
-    variable.assignedVariables.push_back(this);
     ret = true;
   }
   else if(!_assignable && !variable.assignable()){
@@ -112,9 +115,17 @@ bool Variable::match(Variable& variable){
   }
   return ret;
 }
-/*
-void Variable::assignReferenceOfValue(string& value){
-}*/
+
+bool Variable::match(Struct& s){
+  bool ret = false;
+  vectorOfTerm.push_back(&s);
+  /*
+  if(assign(s.symbol()) || (_value == s.symbol())){
+    ret = true;
+  }
+  */
+  return ret;
+}
 
 bool Variable::assignable(){
   return _assignable;

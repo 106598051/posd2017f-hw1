@@ -1,10 +1,10 @@
 all: hw3
 
-hw3: mainTerm.o variable.o atom.o number.o
+hw3: mainTerm.o variable.o atom.o number.o struct.o
 ifeq (${OS}, Windows_NT)
-	g++ -o hw3 mainTerm.o variable.o atom.o number.o -lgtest
+	g++ -o hw3 mainTerm.o variable.o atom.o number.o struct.o -lgtest
 else
-	g++ -o hw3 mainTerm.o variable.o atom.o number.o -lgtest -lpthread
+	g++ -o hw3 mainTerm.o variable.o atom.o number.o struct.o -lgtest -lpthread
 endif
 
 mainTerm.o: mainTerm.cpp utVariable.h utStruct.h
@@ -15,6 +15,8 @@ atom.o: atom.cpp atom.h
 	g++ --std=gnu++11 -c atom.cpp
 number.o: number.cpp number.h
 	g++ --std=gnu++11 -c number.cpp
+struct.o: struct.cpp struct.h
+	g++ --std=gnu++11 -c struct.cpp
 
 clean:
 ifeq (${OS}, Windows_NT)

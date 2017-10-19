@@ -28,25 +28,42 @@ TEST (Variable , haveValue){
 // ?- X=2.7182.
 // X=2.7182
 TEST(Variable , numE_to_varX){
-
+ Variable X("X");
+ Number n(2.7182);
+ X.match(n);
+ ASSERT_EQ("2.7182", X.value());
 }
 
 // ?- X=Y, X=1.
 // Y=1
 TEST (Variable, varY_to_varX_and_num1_to_varX) {
-
+  Variable X("X");
+  Variable Y("Y");
+  Number one(1);
+  X.match(Y);
+  X.match(one);
+  ASSERT_EQ("1", Y.value());
 }
 
 // ?- X=Y, Y=1.
 // X=1
 TEST (Variable, varY_to_varX_and_num1_to_varY) {
-
+  Variable X("X");
+  Variable Y("Y");
+  Number one(1);
+  X.match(Y);
+  Y.match(one);
+  ASSERT_EQ("1", X.value());
 }
 
 // ?- X=X, X=1.
 // X=1
 TEST (Variable, varX_match_varX_and_num1_to_varX) {
-
+  Variable X("X");
+  Number one(1);
+  X.match(X);
+  X.match(one);
+  ASSERT_EQ("1", X.value());
 }
 
 // ?- Y=1, X=Y.
@@ -67,22 +84,8 @@ TEST (Variable, num1_to_varZ_to_varY_to_varX) {
   Variable X("X");
   Variable Y("Y");
   Variable Z("Z");
-  Variable W("W");
   EXPECT_TRUE(X.match(Y));
-  X.assignedList();
-  Y.assignedList();
-  Z.assignedList();
-  W.assignedList();
   EXPECT_TRUE(Y.match(Z));
-  X.assignedList();
-  Y.assignedList();
-  Z.assignedList();
-  W.assignedList();
-  EXPECT_TRUE(W.match(Z));
-  X.assignedList();
-  Y.assignedList();
-  Z.assignedList();
-  W.assignedList();
   EXPECT_TRUE(Z.match(one));
   ASSERT_EQ("1", X.value());
   ASSERT_EQ("1", Y.value());
@@ -93,7 +96,16 @@ TEST (Variable, num1_to_varZ_to_varY_to_varX) {
 // ?- X=Y, X=Z, Z=1
 // X=1, Y=1, Z=1
 TEST (Variable, num1_to_varZ_to_varX_and_varY_to_varX) {
-
+  Number one("one", 1);
+  Variable X("X");
+  Variable Y("Y");
+  Variable Z("Z");
+  EXPECT_TRUE(X.match(Y));
+  EXPECT_TRUE(X.match(Z));
+  EXPECT_TRUE(Z.match(one));
+  ASSERT_EQ("1", X.value());
+  ASSERT_EQ("1", Y.value());
+  ASSERT_EQ("1", Z.value());
 }
 
 // Give there is a Struct s contains Variable X
@@ -102,7 +114,13 @@ TEST (Variable, num1_to_varZ_to_varX_and_varY_to_varX) {
 // Then #symbol() of Y should return "Y"
 // And #value() of Y should return "s(X)"
 TEST (Variable, Struct1) {
-
+  Variable X("X");
+  std::vector<Term *> v = {&X};
+  Struct s(Atom("s"), v);
+  Variable Y("Y");
+  Y.match(s);
+  ASSERT_EQ("Y", Y.symbol());
+  ASSERT_EQ("s(X)", Y.value());
 }
 
 // Give there is a Struct s contains Variable X
@@ -112,7 +130,15 @@ TEST (Variable, Struct1) {
 // Then #symbol() of Y should return "Y"
 // And #value() of Y should return "s(teddy)"
 TEST (Variable, Struct2) {
-
+    Variable X("X");
+    std::vector<Term *> v = {&X};
+    Struct s(Atom("s"), v);
+    Variable Y("Y");
+    Atom teddy("teddy");
+    Y.match(s);
+    X.match(teddy);
+    ASSERT_EQ("Y", Y.symbol());
+    ASSERT_EQ("s(teddy)", Y.value());
 }
 
 #endif

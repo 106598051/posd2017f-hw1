@@ -14,7 +14,9 @@ public:
   //string _symbol;
   //Number(string value);
   Number(string name, int value);
+  Number(string name, double value);
   Number(int value);
+  Number(double value);
   string symbol() const;
   string value() const;
   /*
@@ -29,7 +31,7 @@ public:
   */
 private:
   bool MATCH_FAILURE_DIFF_CONSTANT = false;
-  int _value;
+  double _value;
   bool matching(int const *i);
 };
 

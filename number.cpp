@@ -1,21 +1,31 @@
+#include <sstream>
 #include "term.h"
 #include "number.h"
 #include "atom.h"
 #include "variable.h"
 using std::string;
-/*
-Number::Number(string value){
-  _symbol = value;
-  _value = std::stoi(value);
-}*/
 
 Number::Number(string name, int value){
   _symbol = name;
   _value = value;
 }
 
+Number::Number(string name, double value){
+  _symbol = name;
+  _value = value;
+}
+
 Number::Number(int value){
-  _symbol = std::to_string(value);
+  std::stringstream buffer;
+  buffer << _value;
+  _symbol = buffer.str();
+  _value = value;
+}
+
+Number::Number(double value){
+  std::stringstream buffer;
+  buffer << _value;
+  _symbol = buffer.str();
   _value = value;
 }
 
@@ -24,7 +34,9 @@ string Number::symbol() const{
 }
 
 string Number::value() const{
-  return std::to_string(_value);
+  std::stringstream buffer;
+  buffer << _value;
+  return buffer.str();
 }
 /*
 bool Number::match(string const s){
