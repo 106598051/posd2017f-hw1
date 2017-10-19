@@ -23,7 +23,10 @@ string Variable::value() const{
     */
     return vectorOfTerm[0]->value();
   }
-  else if(_value == ""){
+  else if(_value == "" && assignedVariables.size() > 0){
+    return assignedVariables.front()->symbol();
+  }
+  else if(_value == "" ){
     return _symbol;
   }
   //std::cout << _symbol << ":_value="<<_value << '\n';
@@ -92,13 +95,13 @@ bool Variable::match(Variable& variable){
       );
     }
     std::list<Variable *> tempList = assignedVariables;
-    assignedVariables.push_back(&variable);
+    assignedVariables.push_front(&variable);
     assignedVariables.insert(
       assignedVariables.end(),
       variable.assignedVariables.begin(),
       variable.assignedVariables.end()
     );
-    variable.assignedVariables.push_back(this);
+    variable.assignedVariables.push_front(this);
     variable.assignedVariables.insert(
       variable.assignedVariables.end(),
       tempList.begin(),
