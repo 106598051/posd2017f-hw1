@@ -1,13 +1,13 @@
-all: hw3
+all: hw4
 
-hw3: mainList.o variable.o atom.o number.o struct.o
+hw4: mainList.o variable.o atom.o number.o struct.o list.o
 ifeq (${OS}, Windows_NT)
-	g++ -o hw3 mainList.o variable.o atom.o number.o struct.o -lgtest
+	g++ -o hw4 mainList.o variable.o atom.o number.o struct.o list.o -lgtest
 else
-	g++ -o hw3 mainList.o variable.o atom.o number.o struct.o -lgtest -lpthread
+	g++ -o hw4 mainList.o variable.o atom.o number.o struct.o list.o -lgtest -lpthread
 endif
 
-mainList.o: mainList.cpp utList.h
+mainList.o: mainList.cpp utList.h utVariable.h utStruct.h
 	g++ --std=gnu++11 -c mainList.cpp
 variable.o: variable.cpp variable.h
 	g++ --std=gnu++11 -c variable.cpp
@@ -17,10 +17,12 @@ number.o: number.cpp number.h
 	g++ --std=gnu++11 -c number.cpp
 struct.o: struct.cpp struct.h
 	g++ --std=gnu++11 -c struct.cpp
+list.o: list.cpp list.h
+	g++ --std=gnu++11 -c list.cpp
 
 clean:
 ifeq (${OS}, Windows_NT)
 	del *.o *.exe
 else
-	rm -f *.o hw3
+	rm -f *.o hw4
 endif

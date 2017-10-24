@@ -8,13 +8,11 @@ using std::vector;
 
 class List : public Term {
 public:
+  List ();
+  List (vector<Term *> const & elements);
   string symbol() const;
   string value() const;
   bool match(Term & term);
-
-public:
-  List (): _elements() {}
-  List (vector<Term *> const & elements):_elements(elements){}
   Term * head() const;
   List * tail() const;
 
