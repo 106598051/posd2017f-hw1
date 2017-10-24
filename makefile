@@ -1,14 +1,14 @@
 all: hw3
 
-hw3: mainTerm.o variable.o atom.o number.o struct.o
+hw3: mainList.o variable.o atom.o number.o struct.o
 ifeq (${OS}, Windows_NT)
-	g++ -o hw3 mainTerm.o variable.o atom.o number.o struct.o -lgtest
+	g++ -o hw3 mainList.o variable.o atom.o number.o struct.o -lgtest
 else
-	g++ -o hw3 mainTerm.o variable.o atom.o number.o struct.o -lgtest -lpthread
+	g++ -o hw3 mainList.o variable.o atom.o number.o struct.o -lgtest -lpthread
 endif
 
-mainTerm.o: mainTerm.cpp utVariable.h utStruct.h
-	g++ --std=gnu++11 -c mainTerm.cpp
+mainList.o: mainList.cpp utList.h
+	g++ --std=gnu++11 -c mainList.cpp
 variable.o: variable.cpp variable.h
 	g++ --std=gnu++11 -c variable.cpp
 atom.o: atom.cpp atom.h
