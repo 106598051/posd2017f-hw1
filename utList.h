@@ -259,8 +259,6 @@ TEST (List, emptyExecptionOfTail) {
   }
 }
 
-}
-
 
 
 
