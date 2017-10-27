@@ -48,10 +48,16 @@ bool List::match(Term & term){
 }
 */
 Term * List::head() const{
+  if(_elements.size() == 0){
+    throw string("Accessing head in an empty list");
+  }
   return *_elements.begin();
 }
 
 List * List::tail() const{
+  if(_elements.size()==0){
+    throw string("Accessing tail in an empty list");
+  }
   List *list = new List(_elements);
   list->_elements.erase(list->_elements.begin());
   return list;
