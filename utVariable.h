@@ -7,7 +7,7 @@
 
 TEST(Variable, constructor){
   Variable X("X");
-  ASSERT_EQ("X", X._symbol);
+  ASSERT_EQ("X", X.symbol());
 }
 
 TEST(Variable , matching){
@@ -69,7 +69,7 @@ TEST (Variable, varX_match_varX_and_num1_to_varX) {
 // ?- Y=1, X=Y.
 // X=1
 TEST (Variable, num1_to_varY_and_varX_match_varY) {
-  Number one("one", 1);
+  Number one(1);
   Variable Y("Y");
   EXPECT_TRUE(Y.match(one));
   Variable X("X");
@@ -80,7 +80,7 @@ TEST (Variable, num1_to_varY_and_varX_match_varY) {
 // ?- X=Y, Y=Z, Z=1
 // X=1, Y=1, Z=1
 TEST (Variable, num1_to_varZ_to_varY_to_varX) {
-  Number one("one", 1);
+  Number one(1);
   Variable X("X");
   Variable Y("Y");
   Variable Z("Z");
@@ -100,7 +100,7 @@ TEST (Variable, num1_to_varZ_to_varY_to_varX) {
 // ?- X=Y, X=Z, Z=1
 // X=1, Y=1, Z=1
 TEST (Variable, num1_to_varZ_to_varX_and_varY_to_varX) {
-  Number one("one", 1);
+  Number one(1);
   Variable X("X");
   Variable Y("Y");
   Variable Z("Z");

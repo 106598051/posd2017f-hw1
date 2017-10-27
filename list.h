@@ -12,7 +12,8 @@ public:
   List (vector<Term *> const & elements);
   string symbol() const;
   string value() const;
-  bool match(Term & term);
+  vector<Term *> getElements();
+  //bool match(Term & term);
   Term * head() const;
   List * tail() const;
 

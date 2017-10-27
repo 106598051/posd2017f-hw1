@@ -1,9 +1,9 @@
 #include <gtest/gtest.h>
-#include "utList.h"
-/* remain executable */
+/* remain executable *
 #include "utStruct.h"
 #include "utVariable.h"
-/* ---------------- */
+ ---------------- */
+#include "utList.h"
 
 int main( int argc , char **argv )
 {
