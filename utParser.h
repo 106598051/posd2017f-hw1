@@ -176,7 +176,9 @@ TEST_F(ParserTest, parseList) {
 // When parser parses all terms via scanner.
 // Then it should return a string: "unexpected token" as exception.
 TEST_F(ParserTest, illegal1) {
-
+  Scanner scanner("[1,2)");
+  Parser parser(scanner);
+  ASSERT_EQ("unexpected token", parser.createTerm()->symbol());
 }
 
 // Given there is string: ".(1,[])" in scanner.
@@ -186,7 +188,13 @@ TEST_F(ParserTest, illegal1) {
 // And #symbol() of Struct should return ".(1, [])".
 // And the first term should be number: "1", the second term should be another List: "[]".
 TEST_F(ParserTest, ListAsStruct) {
-
+  Scanner scanner(".(1,[])");
+  Parser parser(scanner);
+  Term* term = parser.createTerm();
+  ASSERT_EQ(2, term->arity());
+  ASSERT_EQ(".(1, [])", term->symbol());
+  ASSERT_EQ("1", term->args(0)->symbol());
+  ASSERT_EQ("[]", term->args(1)->symbol());
 }
 
 

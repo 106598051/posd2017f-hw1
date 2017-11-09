@@ -14,7 +14,8 @@ public:
   Struct(Atom const & name, std::vector<Term *> args);
 
   Term * args(int index);
-  int sizeOfArgs();
+  int sizeOfArgs() const;
+  int arity() const;
 
   Atom const & name();
   string symbol() const;

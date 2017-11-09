@@ -60,3 +60,12 @@ std::vector<Term *> Term::getElements(){
   vector<Term *> v;
   return v;
 }
+
+int Term::arity() const{
+  return 0;
+}
+
+Term * Term::args(int index) {
+  Term * v;
+  return v;
+}

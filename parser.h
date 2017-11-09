@@ -2,7 +2,7 @@
 #define PARSER_H
 #include <string>
 using std::string;
-#include <iostream>
+//#include <iostream>
 
 #include "atom.h"
 #include "variable.h"
@@ -21,10 +21,12 @@ public:
     if(token == VAR){
       //std::cout<<"return Variable"<<std::endl;
       return new Variable(symtable[_scanner.tokenValue()].first);
-    }else if(token == NUMBER){
+    }
+    else if(token == NUMBER){
       //std::cout<<"return Number"<<std::endl;
       return new Number(_scanner.tokenValue());
-    }else if(token == ATOM){
+    }
+    else if(token == ATOM){
       Atom* atom = new Atom(symtable[_scanner.tokenValue()].first);
       if(_scanner.currentChar() == '(' ) {
         //std::cout<<"In Struct process"<<std::endl;
@@ -34,6 +36,30 @@ public:
           //std::cout<<"return Struct"<<std::endl;
           return new Struct(*atom, terms);
         }
+        else{
+          Atom* unexpected = new Atom("unexpected token");
+          return unexpected;
+        }
+      }
+      else {
+        //std::cout<<"return Atom"<<std::endl;
+        return atom;
+      }
+    }
+    else if(token == ATOMSC){
+      Atom* atom = new Atom(symtable[_scanner.tokenValue()].first);
+      if(_scanner.currentChar() == '(' ) {
+        //std::cout<<"In Struct process"<<std::endl;
+        _scanner.nextToken() ;
+        vector<Term*> terms = getArgs();
+        if(_currentToken == ')'){
+          //std::cout<<"return Struct"<<std::endl;
+          return new Struct(*atom, terms);
+        }
+        else{
+          Atom* unexpected = new Atom("unexpected token");
+          return unexpected;
+        }
       }
       else {
         //std::cout<<"return Atom"<<std::endl;
@@ -42,13 +68,14 @@ public:
     }
     else if((char)token == '['){
       //std::cout<<"In list process"<<std::endl;
-      //token = _scanner.nextToken() ;
-      //std::cout<<"token(before)="<<token<<std::endl;
-      //_scanner.nextToken();
       vector<Term *> elements = getArgs();
       //std::cout<<"elements.size()="<<elements.size()<<std::endl;
       if(_currentToken == ']'){
         return new List(elements);
+      }
+      else{
+        Atom* unexpected = new Atom("unexpected token");
+        return unexpected;
       }
     }
     else if ((char)token == ']'){
@@ -64,9 +91,10 @@ public:
     vector<Term*> args;
     if(term){
       args.push_back(term);
-        while((_currentToken = _scanner.nextToken()) == ',') {
-          args.push_back(createTerm());
-        }
+      
+      while((_currentToken = _scanner.nextToken()) == ',') {
+        args.push_back(createTerm());
+      }
     }
 
     return args;

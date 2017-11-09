@@ -13,8 +13,12 @@ Term * Struct::args(int index) {
   return _args[index];
 }
 
-int Struct::sizeOfArgs(){
+int Struct::sizeOfArgs() const{
   return _args.size();
+}
+
+int Struct::arity() const{
+  return Struct::sizeOfArgs();
 }
 
 Atom const & Struct::name() {

@@ -17,6 +17,10 @@ public:
   virtual bool match(Term & term);
 
   virtual std::vector<Term *> getElements();
+
+  virtual int arity() const;
+
+  virtual Term * args(int index);
 protected:
   Term();
   Term(string s);
