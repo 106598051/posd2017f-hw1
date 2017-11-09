@@ -1,4 +1,4 @@
-all: clean hw5
+all: hw5
 
 hw5: mainParser.o variable.o atom.o number.o struct.o list.o term.o
 ifeq (${OS}, Windows_NT)

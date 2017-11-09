@@ -37,8 +37,9 @@ public:
           return new Struct(*atom, terms);
         }
         else{
-          Atom* unexpected = new Atom("unexpected token");
-          return unexpected;
+          /*Atom* unexpected = new Atom("unexpected token");
+          return unexpected;*/
+          throw string("unexpected token");
         }
       }
       else {
@@ -57,8 +58,9 @@ public:
           return new Struct(*atom, terms);
         }
         else{
-          Atom* unexpected = new Atom("unexpected token");
-          return unexpected;
+          /*Atom* unexpected = new Atom("unexpected token");
+          return unexpected;*/
+          throw string("unexpected token");
         }
       }
       else {
@@ -77,8 +79,9 @@ public:
         return new List(elements);
       }
       else{
-        Atom* unexpected = new Atom("unexpected token");
-        return unexpected;
+        /*Atom* unexpected = new Atom("unexpected token");
+        return unexpected;*/
+        throw string("unexpected token");
       }
     }
     else if ((char)token == ']'){
