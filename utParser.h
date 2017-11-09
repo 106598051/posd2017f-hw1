@@ -205,7 +205,13 @@ TEST_F(ParserTest, ListAsStruct) {
 // And #symbol() of Struct should return ".(2, .(1, []))"
 // And the first term should be number: "2", the second term should be another Strcut: ".(1, [])".
 TEST_F(ParserTest, ListAsStruct2) {
-
+  Scanner scanner(".(2,.(1,[]))");
+  Parser parser(scanner);
+  Term* term = parser.createTerm();
+  ASSERT_EQ(2, term->arity());
+  ASSERT_EQ(".(2, .(1, []))", term->symbol());
+  ASSERT_EQ("2", term->args(0)->symbol());
+  ASSERT_EQ(".(1, [])", term->args(1)->symbol());
 }
 
 
