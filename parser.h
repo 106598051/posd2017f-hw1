@@ -2,7 +2,7 @@
 #define PARSER_H
 #include <string>
 using std::string;
-//#include <iostream>
+#include <iostream>
 
 #include "atom.h"
 #include "variable.h"
@@ -30,7 +30,7 @@ public:
       Atom* atom = new Atom(symtable[_scanner.tokenValue()].first);
       if(_scanner.currentChar() == '(' ) {
         //std::cout<<"In Struct process"<<std::endl;
-        _scanner.nextToken() ;
+        _scanner.nextToken();
         vector<Term*> terms = getArgs();
         if(_currentToken == ')'){
           //std::cout<<"return Struct"<<std::endl;
@@ -50,7 +50,7 @@ public:
       Atom* atom = new Atom(symtable[_scanner.tokenValue()].first);
       if(_scanner.currentChar() == '(' ) {
         //std::cout<<"In Struct process"<<std::endl;
-        _scanner.nextToken() ;
+        _scanner.nextToken();
         vector<Term*> terms = getArgs();
         if(_currentToken == ')'){
           //std::cout<<"return Struct"<<std::endl;
@@ -65,6 +65,9 @@ public:
         //std::cout<<"return Atom"<<std::endl;
         return atom;
       }
+    }
+    else if ((char)token == ')'){
+      _currentToken = token;
     }
     else if((char)token == '['){
       //std::cout<<"In list process"<<std::endl;
@@ -91,12 +94,12 @@ public:
     vector<Term*> args;
     if(term){
       args.push_back(term);
-      
+
       while((_currentToken = _scanner.nextToken()) == ',') {
         args.push_back(createTerm());
       }
     }
-
+    //std::cout<<"_currentToken="<<_currentToken<<std::endl;
     return args;
   }
 

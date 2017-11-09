@@ -11,6 +11,7 @@ using std::string;
 class Struct:public Term
 {
 public:
+  //Struct(Atom const & name, nullptr);
   Struct(Atom const & name, std::vector<Term *> args);
 
   Term * args(int index);

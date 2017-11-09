@@ -26,29 +26,29 @@ Atom const & Struct::name() {
 }
 string Struct::symbol() const{
   string ret =_name.symbol() + "(";
-  for(int i = 0; i < _args.size() - 1 ; i++){
-    ret += _args[i]-> symbol() + ", ";
+  if(_args.size() == 0){
+    ret += ")";
   }
-  ret += _args[_args.size()-1]-> symbol() + ")";
+  else{
+    for(int i = 0; i < _args.size() - 1 ; i++){
+      if(_args[i]-> value() == "") {
+        ret += _args[i]-> symbol() + ", ";
+      }
+      else{
+        ret += _args[i]-> value() + ", ";
+      }
+    }
+    if(_args[_args.size()-1]-> value() == ""){
+      ret += _args[_args.size()-1]-> symbol() + ")";
+    }
+    else{
+      ret += _args[_args.size()-1]-> value() + ")";
+    }
+  }
   return  ret;
 }
 string Struct::value() const{
-  string ret =_name.symbol() + "(";
-  for(int i = 0; i < _args.size() - 1 ; i++){
-    if(_args[i]-> value() == "") {
-      ret += _args[i]-> symbol() + ", ";
-    }
-    else{
-      ret += _args[i]-> value() + ", ";
-    }
-  }
-  if(_args[_args.size()-1]-> value() == ""){
-    ret += _args[_args.size()-1]-> symbol() + ")";
-  }
-  else{
-    ret += _args[_args.size()-1]-> value() + ")";
-  }
-  return  ret;
+  return Struct::symbol();
 }
 bool Struct::match(Term &term){
   Struct * ps = dynamic_cast<Struct *>(&term);
