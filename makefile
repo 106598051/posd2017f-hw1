@@ -1,14 +1,14 @@
-all: hw4
+all: clean hw5
 
-hw4: mainList.o variable.o atom.o number.o struct.o list.o term.o
+hw5: mainParser.o variable.o atom.o number.o struct.o list.o term.o
 ifeq (${OS}, Windows_NT)
-	g++ -o hw4 mainList.o variable.o atom.o number.o struct.o list.o term.o -lgtest
+	g++ -o hw5 mainParser.o variable.o atom.o number.o struct.o list.o term.o -lgtest
 else
-	g++ -o hw4 mainList.o variable.o atom.o number.o struct.o list.o term.o -lgtest -lpthread
+	g++ -o hw5 mainParser.o variable.o atom.o number.o struct.o list.o term.o -lgtest -lpthread
 endif
 
-mainList.o: mainList.cpp utVariable.h utStruct.h
-	g++ --std=gnu++11 -c mainList.cpp
+mainParser.o: mainParser.cpp utParser.h
+	g++ --std=gnu++11 -c mainParser.cpp
 variable.o: variable.cpp variable.h
 	g++ --std=gnu++11 -c variable.cpp
 atom.o: atom.cpp atom.h
@@ -26,5 +26,5 @@ clean:
 ifeq (${OS}, Windows_NT)
 	del *.o *.exe
 else
-	rm -f *.o hw4
+	rm -f *.o hw5
 endif
