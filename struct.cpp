@@ -62,7 +62,7 @@ string Struct::value() const{
   for(int i = 0; i < _args.size() - 1 ; i++){
     ret += _args[i]-> value() + ", ";
   }
-  ret += _args[_args.size()-1]-> value() + ")";
+  ret += _args[_args.size() - 1]->value() + ")";
   return ret;
   //return Struct::symbol();
 }

@@ -416,7 +416,7 @@ TEST_F(ParserTest, MatchingSuccess) {
 
   EXPECT_EQ("1", terms[0]->value());
   EXPECT_EQ("2", terms[2]->value());
-  EXPECT_EQ("s(s(2))", terms[4]->value());
+  EXPECT_EQ("s(s(X))", terms[4]->value());
 }
 
 #endif
