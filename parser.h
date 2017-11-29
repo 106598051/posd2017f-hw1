@@ -2,7 +2,7 @@
 #define PARSER_H
 #include <string>
 using std::string;
-#include <iostream>
+//#include <iostream>
 
 #include "atom.h"
 #include "variable.h"
@@ -11,6 +11,8 @@ using std::string;
 #include "struct.h"
 #include "number.h"
 #include "list.h"
+#include "node.h"
+#include "utParser.h"
 
 class Parser{
 public:
@@ -106,10 +108,121 @@ public:
     return args;
   }
 
+  Term* structure(){
+    Atom structureName(symtable[_scanner.tokenValue()].first);
+    int startIndexOfStructure = _terms.size();
+    _scanner.nextToken();
+    createTerms();
+    if(_currentToken == ')'){
+      vector<Term *> args(_terms.begin() + startIndexOfStructure, _terms.end());
+      return new Struct(structureName, args);
+    }
+    else {
+      throw string("unexpected token");
+    }
+  }
 
+  Term* list(){
+    int startIndexOfList = _terms.size();
+    if(_currentToken == ']'){
+      vector<Term *> elements(_terms.begin() + startIndexOfList, _terms.end());
+      _terms.erase(_terms.begin() + startIndexOfList, _terms.end());
+      return new List(elements);
+    }
+    else {
+      throw string("unexpected token");
+    }
+  }
+
+  vector<Term *> &getTerms(){
+    return _terms;
+  }
+
+  void matchings(){
+    Term *term = createTerm();
+    if(term != nullptr){
+      if(isCOMMA == 1){
+        Term *findTerm = find(term);
+        if(findTerm != nullptr){
+          term->match(*findTerm);
+        }
+      }
+      _terms.push_back(term);
+      while((_currentToken = _scanner.nextToken()) == ','
+      || _currentToken == '='
+      || _currentToken == ';'){
+        if (_currentToken == '=') {
+          isCOMMA = 0;
+          Node *left = new Node(TERM, _terms.back(), nullptr, nullptr);
+          _terms.push_back(createTerm());
+          Node *right = new Node(TERM, _terms.back(), nullptr, nullptr);
+          Node *root = new Node(EQUALITY, nullptr, left, right);
+          _expressionTree = root;
+        } else if (_currentToken == ',') {
+          isCOMMA = 1;
+          Node *left = _expressionTree;
+          matchings();
+          Node *root = new Node(COMMA, nullptr, left, expressionTree());
+          _expressionTree = root;
+        } else if (_currentToken == ';') {
+          isCOMMA = 0;
+          Node *left = _expressionTree;
+          matchings();
+          Node *root = new Node(SEMICOLON, nullptr, left, expressionTree());
+          _expressionTree = root;
+        }
+      }
+    }
+  }
+
+  Term *find(Term *term){
+    for(int index = 0; index < _terms.size(); index++){
+      if(_terms[index]->symbol() == term->symbol()){
+        return _terms[index];
+      }
+      Struct *s = dynamic_cast<Struct *>(_terms[index]);
+      if(s){
+        return findStruct(s, term);
+      }
+    }
+  }
+
+  Term *findStruct(Struct *s, Term *term){
+    for (int index = 0; index < s->arity(); index++) {
+      if (s->args(index)->symbol() == term->symbol()) {
+        return s->args(index);
+      }
+      Struct *structure = dynamic_cast<Struct *>(s->args(index));
+      if (structure) {
+        return findStruct(structure, term);
+      }
+    }
+  }
+
+  Node *expressionTree(){
+    return _expressionTree;
+  }
 
 private:
+  FRIEND_TEST(ParserTest, createArgs);
+  FRIEND_TEST(ParserTest,ListOfTermsEmpty);
+  FRIEND_TEST(ParserTest,listofTermsTwoNumber);
+  FRIEND_TEST(ParserTest, createTerm_nestedStruct3);
+
+  void createTerms(){
+    Term * term = createTerm();
+    if(term != nullptr){
+      _terms.push_back(term);
+      while ((_currentToken = _scanner.nextToken()) == ',') {
+        _terms.push_back(createTerm());
+      }
+    }
+  }
+
   Scanner _scanner;
   int _currentToken;
+  std::vector<Term *> _terms;
+  Node * _expressionTree;
+  int isCOMMA = 0;
 };
 #endif
