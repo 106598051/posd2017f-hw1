@@ -24,7 +24,7 @@ public:
 protected:
   Term();
   Term(string s);
-  Term(int value);
+  //Term(int value);
   Term(double value);
 
   string _symbol;

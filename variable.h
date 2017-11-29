@@ -13,7 +13,7 @@ public:
   bool match(Term& term);
 
 private:
-  Term *_content = 0;
+  Term *_content;
 };
 
 #endif

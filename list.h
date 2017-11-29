@@ -13,11 +13,13 @@ public:
   string symbol() const;
   string value() const;
   vector<Term *> getElements();
-  //bool match(Term & term);
+  bool match(Term & term);
   Term * head() const;
   List * tail() const;
+  bool compareList(List *list);
+  int getSize() const;
 
-private:
+protected:
   vector<Term *> _elements;
 
 };

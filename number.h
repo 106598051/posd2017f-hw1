@@ -5,7 +5,7 @@
 
 class Number : public Term{
 public:
-  Number(int valueOfInt);
+  //Number(int valueOfInt);
   Number(double valueOfDouble);
 };
 

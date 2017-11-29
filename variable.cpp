@@ -2,18 +2,21 @@
 
 
 
-Variable::Variable(string s):Term(s){}
+Variable::Variable(string s):Term(s), _content(0){}
 
 string Variable::value() const{
-  if (_content)
+  if(_content) {
     return _content->value();
-  else
+  }
+  else {
     return Term::value();
+  }
 }
-bool Variable::match( Term & term ){
-  if (this == &term)
+bool Variable::match( Term & term ) {
+  if(this == &term) {
     return true;
-  if(!_content){
+  }
+  if(!_content) {
     _content = &term ;
     return true;
   }

@@ -11,10 +11,18 @@ public:
   bool evaluate(){
     if (payload == EQUALITY) {
       return left->term->match(*(right->term));
-    } else if (payload == COMMA) {
-      return (left->evaluate() && right->evaluate());
-    } else if (payload == SEMICOLON) {
-      return (left->evaluate() || right->evaluate());
+    }
+    else if (payload == COMMA) {
+      bool l = left->evaluate();
+      bool r = right->evaluate();
+      bool result = l && r;
+      return result;
+    }
+    else if (payload == SEMICOLON) {
+      bool l = left->evaluate();
+      bool r = right->evaluate();
+      bool result = l || r;
+      return result;
     }
   }
 //private:

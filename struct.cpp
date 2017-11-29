@@ -25,7 +25,16 @@ Atom const & Struct::name() {
   return _name;
 }
 string Struct::symbol() const{
-  string ret =_name.symbol() + "(";
+  string ret = _name.symbol() + "(";
+  if(_args.size()){
+    std::vector<Term *>::const_iterator it;
+    for ( it = _args.begin(); it != _args.end()-1; ++it){
+      ret += (*it)->symbol() + ", ";
+    }
+    ret  += (*it)->symbol();
+  }
+  ret += ")";
+  /*
   if(_args.size() == 0){
     ret += ")";
   }
@@ -45,11 +54,19 @@ string Struct::symbol() const{
       ret += _args[_args.size()-1]-> value() + ")";
     }
   }
-  return  ret;
+  */
+  return ret;
 }
 string Struct::value() const{
-  return Struct::symbol();
+  string ret =_name.value() + "(";
+  for(int i = 0; i < _args.size() - 1 ; i++){
+    ret += _args[i]-> value() + ", ";
+  }
+  ret += _args[_args.size()-1]-> value() + ")";
+  return ret;
+  //return Struct::symbol();
 }
+/*
 bool Struct::match(Term &term){
   Struct * ps = dynamic_cast<Struct *>(&term);
   if (ps){
@@ -65,6 +82,7 @@ bool Struct::match(Term &term){
   }
   return false;
 }
+*/
 /*
 bool Struct::match(Struct &term){
   Struct * ps = dynamic_cast<Struct *>(&term);

@@ -8,18 +8,19 @@
 Term::Term ():_symbol(""){}
 
 Term::Term (string s):_symbol(s) {}
-
+/*
 Term::Term(int value){
   std::stringstream buffer;
   buffer << value;
   _symbol = buffer.str();
-}
+}*/
 
 Term::Term(double value){
   std::stringstream buffer;
   buffer << value;
   _symbol = buffer.str();
 }
+
 string Term::symbol() const{
   return _symbol;
 };
@@ -27,8 +28,16 @@ string Term::symbol() const{
 string Term::value() const{
   return Term::symbol();
 };
+
 bool Term::match(Term & term) {
-  bool result = false;
+  //bool result = false;
+  if (typeid(term) ==  typeid(Variable)) {
+    return term.match(*this);
+  }
+  else {
+    return symbol() == term.symbol();
+  }
+  /*
   if (typeid(term) ==  typeid(Variable)){
     result = term.match(*this);
   }
@@ -53,7 +62,8 @@ bool Term::match(Term & term) {
   else{
     result = symbol() == term.symbol();
   }
-  return result;
+  */
+  //return result;
 }
 
 std::vector<Term *> Term::getElements(){
@@ -66,6 +76,9 @@ int Term::arity() const{
 }
 
 Term * Term::args(int index) {
+  throw string("not available");
+  /*
   Term * v;
   return v;
+  */
 }

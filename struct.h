@@ -21,7 +21,7 @@ public:
   Atom const & name();
   string symbol() const;
   string value() const;
-  bool match(Term &term);
+  //bool match(Term &term);
   //bool match(Struct &term);
 private:
   Atom _name;

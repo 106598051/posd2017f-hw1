@@ -12,7 +12,9 @@ using std::vector;
 class Scanner {
 public:
   Scanner (string in=""):buffer(in), pos(0), _tokenValue(NONE){}
-  void setInput(string in) {buffer = in;}
+  void setInput(string in) {
+    buffer = in;
+  }
 
   int nextToken() {
     //std::cout<<currentChar()<<std::endl;
@@ -39,14 +41,18 @@ public:
     }
   }
 
-  int tokenValue() const {return _tokenValue;}
+  int tokenValue() const {
+    return _tokenValue;
+  }
 
   int skipLeadingWhiteSpace() {
     for (; (buffer[pos] == ' ' || buffer[pos] == '\t') && pos<buffer.length(); ++pos);
     return position();
   }
 
-  int position() const {return pos;}
+  int position() const {
+    return pos;
+  }
 
   char currentChar() {
     return buffer[pos];

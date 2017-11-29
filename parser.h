@@ -16,7 +16,8 @@ using std::string;
 
 class Parser{
 public:
-  Parser(Scanner scanner) : _scanner(scanner){}
+  Parser(Scanner scanner) : _scanner(scanner), _terms(){}
+
   Term* createTerm(){
     int token = _scanner.nextToken();
     //std::cout<<"token(createTerm)="<<token<<std::endl;
@@ -39,8 +40,8 @@ public:
           return new Struct(*atom, terms);
         }
         else{
-          /*Atom* unexpected = new Atom("unexpected token");
-          return unexpected;*/
+          //Atom* unexpected = new Atom("unexpected token");
+          //return unexpected;
           throw string("unexpected token");
         }
       }
@@ -60,8 +61,8 @@ public:
           return new Struct(*atom, terms);
         }
         else{
-          /*Atom* unexpected = new Atom("unexpected token");
-          return unexpected;*/
+          //Atom* unexpected = new Atom("unexpected token");
+          //return unexpected;
           throw string("unexpected token");
         }
       }
@@ -81,8 +82,8 @@ public:
         return new List(elements);
       }
       else{
-        /*Atom* unexpected = new Atom("unexpected token");
-        return unexpected;*/
+        //Atom* unexpected = new Atom("unexpected token");
+        //return unexpected;
         throw string("unexpected token");
       }
     }
@@ -91,6 +92,30 @@ public:
     }
     return nullptr;
   }
+
+  /*
+  Term* createTerm(){
+    int token = _scanner.nextToken();
+    _currentToken = token;
+    if(token == VAR){
+      return new Variable(symtable[_scanner.tokenValue()].first);
+    }else if(token == NUMBER){
+      return new Number(_scanner.tokenValue());
+    }else if(token == ATOM || token == ATOMSC){
+      Atom* atom = new Atom(symtable[_scanner.tokenValue()].first);
+      if(_scanner.currentChar() == '(' ) {
+        return structure();
+      }
+      else
+        return atom;
+    }
+    else if(token == '['){
+      return list();
+    }
+    return nullptr;
+  }
+  */
+
 
   vector<Term*> getArgs()
   {
@@ -107,6 +132,7 @@ public:
     //std::cout<<"_currentToken="<<_currentToken<<std::endl;
     return args;
   }
+
 
   Term* structure(){
     Atom structureName(symtable[_scanner.tokenValue()].first);
@@ -141,7 +167,7 @@ public:
   void matchings(){
     Term *term = createTerm();
     if(term != nullptr){
-      if(isCOMMA == 1){
+      if(isCOMMA){
         Term *findTerm = find(term);
         if(findTerm != nullptr){
           term->match(*findTerm);
@@ -152,20 +178,20 @@ public:
       || _currentToken == '='
       || _currentToken == ';'){
         if (_currentToken == '=') {
-          isCOMMA = 0;
+          isCOMMA = false;
           Node *left = new Node(TERM, _terms.back(), nullptr, nullptr);
           _terms.push_back(createTerm());
           Node *right = new Node(TERM, _terms.back(), nullptr, nullptr);
           Node *root = new Node(EQUALITY, nullptr, left, right);
           _expressionTree = root;
         } else if (_currentToken == ',') {
-          isCOMMA = 1;
+          isCOMMA = true;
           Node *left = _expressionTree;
           matchings();
           Node *root = new Node(COMMA, nullptr, left, expressionTree());
           _expressionTree = root;
         } else if (_currentToken == ';') {
-          isCOMMA = 0;
+          isCOMMA = false;
           Node *left = _expressionTree;
           matchings();
           Node *root = new Node(SEMICOLON, nullptr, left, expressionTree());
@@ -205,8 +231,8 @@ public:
 
 private:
   FRIEND_TEST(ParserTest, createArgs);
-  FRIEND_TEST(ParserTest,ListOfTermsEmpty);
-  FRIEND_TEST(ParserTest,listofTermsTwoNumber);
+  FRIEND_TEST(ParserTest, ListOfTermsEmpty);
+  FRIEND_TEST(ParserTest, listofTermsTwoNumber);
   FRIEND_TEST(ParserTest, createTerm_nestedStruct3);
 
   void createTerms(){
@@ -223,6 +249,6 @@ private:
   int _currentToken;
   std::vector<Term *> _terms;
   Node * _expressionTree;
-  int isCOMMA = 0;
+  bool isCOMMA = false;
 };
 #endif
