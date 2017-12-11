@@ -6,8 +6,9 @@
 #include "term.h"
 #include "atom.h"
 
-using std::string;
+// using std::string;
 
+template<typename T> class Iterator;
 class Struct:public Term
 {
 public:
@@ -23,6 +24,11 @@ public:
   string value() const;
   //bool match(Term &term);
   //bool match(Struct &term);
+
+  Iterator<Term *> * createIterator();
+  Iterator<Term *> * createDFSIterator();
+  Iterator<Term *> * createBFSIterator();
+
 private:
   Atom _name;
   std::vector<Term *> _args;

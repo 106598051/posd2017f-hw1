@@ -18,82 +18,82 @@ class Parser{
 public:
   Parser(Scanner scanner) : _scanner(scanner), _terms(){}
 
-  Term* createTerm(){
-    int token = _scanner.nextToken();
-    //std::cout<<"token(createTerm)="<<token<<std::endl;
-    if(token == VAR){
-      //std::cout<<"return Variable"<<std::endl;
-      return new Variable(symtable[_scanner.tokenValue()].first);
-    }
-    else if(token == NUMBER){
-      //std::cout<<"return Number"<<std::endl;
-      return new Number(_scanner.tokenValue());
-    }
-    else if(token == ATOM){
-      Atom* atom = new Atom(symtable[_scanner.tokenValue()].first);
-      if(_scanner.currentChar() == '(' ) {
-        //std::cout<<"In Struct process"<<std::endl;
-        _scanner.nextToken();
-        vector<Term*> terms = getArgs();
-        if(_currentToken == ')'){
-          //std::cout<<"return Struct"<<std::endl;
-          return new Struct(*atom, terms);
-        }
-        else{
-          //Atom* unexpected = new Atom("unexpected token");
-          //return unexpected;
-          throw string("unexpected token");
-        }
-      }
-      else {
-        //std::cout<<"return Atom"<<std::endl;
-        return atom;
-      }
-    }
-    else if(token == ATOMSC){
-      Atom* atom = new Atom(symtable[_scanner.tokenValue()].first);
-      if(_scanner.currentChar() == '(' ) {
-        //std::cout<<"In Struct process"<<std::endl;
-        _scanner.nextToken();
-        vector<Term*> terms = getArgs();
-        if(_currentToken == ')'){
-          //std::cout<<"return Struct"<<std::endl;
-          return new Struct(*atom, terms);
-        }
-        else{
-          //Atom* unexpected = new Atom("unexpected token");
-          //return unexpected;
-          throw string("unexpected token");
-        }
-      }
-      else {
-        //std::cout<<"return Atom"<<std::endl;
-        return atom;
-      }
-    }
-    else if ((char)token == ')'){
-      _currentToken = token;
-    }
-    else if((char)token == '['){
-      //std::cout<<"In list process"<<std::endl;
-      vector<Term *> elements = getArgs();
-      //std::cout<<"elements.size()="<<elements.size()<<std::endl;
-      if(_currentToken == ']'){
-        return new List(elements);
-      }
-      else{
-        //Atom* unexpected = new Atom("unexpected token");
-        //return unexpected;
-        throw string("unexpected token");
-      }
-    }
-    else if ((char)token == ']'){
-      _currentToken = token;
-    }
-    return nullptr;
-  }
+  // Term* createTerm(){
+  //   int token = _scanner.nextToken();
+  //   //std::cout<<"token(createTerm)="<<token<<std::endl;
+  //   if(token == VAR){
+  //     //std::cout<<"return Variable"<<std::endl;
+  //     return new Variable(symtable[_scanner.tokenValue()].first);
+  //   }
+  //   else if(token == NUMBER){
+  //     //std::cout<<"return Number"<<std::endl;
+  //     return new Number(_scanner.tokenValue());
+  //   }
+  //   else if(token == ATOM){
+  //     Atom* atom = new Atom(symtable[_scanner.tokenValue()].first);
+  //     if(_scanner.currentChar() == '(' ) {
+  //       //std::cout<<"In Struct process"<<std::endl;
+  //       _scanner.nextToken();
+  //       vector<Term*> terms = getArgs();
+  //       if(_currentToken == ')'){
+  //         //std::cout<<"return Struct"<<std::endl;
+  //         return new Struct(*atom, terms);
+  //       }
+  //       else{
+  //         //Atom* unexpected = new Atom("unexpected token");
+  //         //return unexpected;
+  //         throw string("unexpected token");
+  //       }
+  //     }
+  //     else {
+  //       //std::cout<<"return Atom"<<std::endl;
+  //       return atom;
+  //     }
+  //   }
+  //   else if(token == ATOMSC){
+  //     Atom* atom = new Atom(symtable[_scanner.tokenValue()].first);
+  //     if(_scanner.currentChar() == '(' ) {
+  //       //std::cout<<"In Struct process"<<std::endl;
+  //       _scanner.nextToken();
+  //       vector<Term*> terms = getArgs();
+  //       if(_currentToken == ')'){
+  //         //std::cout<<"return Struct"<<std::endl;
+  //         return new Struct(*atom, terms);
+  //       }
+  //       else{
+  //         //Atom* unexpected = new Atom("unexpected token");
+  //         //return unexpected;
+  //         throw string("unexpected token");
+  //       }
+  //     }
+  //     else {
+  //       //std::cout<<"return Atom"<<std::endl;
+  //       return atom;
+  //     }
+  //   }
+  //   else if ((char)token == ')'){
+  //     _currentToken = token;
+  //   }
+  //   else if((char)token == '['){
+  //     //std::cout<<"In list process"<<std::endl;
+  //     vector<Term *> elements = getArgs();
+  //     //std::cout<<"elements.size()="<<elements.size()<<std::endl;
+  //     if(_currentToken == ']'){
+  //       return new List(elements);
+  //     }
+  //     else{
+  //       //Atom* unexpected = new Atom("unexpected token");
+  //       //return unexpected;
+  //       throw string("unexpected token");
+  //     }
+  //   }
+  //   else if ((char)token == ']'){
+  //     _currentToken = token;
+  //   }
+  //   return nullptr;
+  // }
 
-  /*
+
   Term* createTerm(){
     int token = _scanner.nextToken();
     _currentToken = token;
@@ -114,7 +114,7 @@ public:
     }
     return nullptr;
   }
-  */
+
 
 
   vector<Term*> getArgs()
@@ -148,14 +148,27 @@ public:
     }
   }
 
-  Term* list(){
-    int startIndexOfList = _terms.size();
-    if(_currentToken == ']'){
-      vector<Term *> elements(_terms.begin() + startIndexOfList, _terms.end());
-      _terms.erase(_terms.begin() + startIndexOfList, _terms.end());
-      return new List(elements);
-    }
-    else {
+  // Term* list(){
+  //   int startIndexOfList = _terms.size();
+  //   if(_currentToken == ']'){
+  //     vector<Term *> elements(_terms.begin() + startIndexOfList, _terms.end());
+  //     _terms.erase(_terms.begin() + startIndexOfList, _terms.end());
+  //     return new List(elements);
+  //   }
+  //   else {
+  //     throw string("unexpected token");
+  //   }
+  // }
+
+  Term * list() {
+    int startIndexOfListArgs = _terms.size();
+    createTerms();
+    if(_currentToken == ']')
+    {
+      vector<Term *> args(_terms.begin() + startIndexOfListArgs, _terms.end());
+      _terms.erase(_terms.begin() + startIndexOfListArgs, _terms.end());
+      return new List(args);
+    } else {
       throw string("unexpected token");
     }
   }
@@ -202,6 +215,7 @@ public:
   }
 
   Term *find(Term *term){
+    Term * t = nullptr;
     for(int index = 0; index < _terms.size(); index++){
       if(_terms[index]->symbol() == term->symbol()){
         return _terms[index];
@@ -211,6 +225,7 @@ public:
         return findStruct(s, term);
       }
     }
+    return t;
   }
 
   Term *findStruct(Struct *s, Term *term){

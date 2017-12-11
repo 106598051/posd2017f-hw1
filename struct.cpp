@@ -1,10 +1,11 @@
 #include <vector>
 #include <string>
 #include "struct.h"
-#include "term.h"
-#include "atom.h"
+#include "iterator.h"
+// #include "term.h"
+// #include "atom.h"
 
-using std::string;
+// using std::string;
 
 Struct::Struct(Atom const & name, std::vector<Term *> args):_name(name), _args(args) {
 }
@@ -99,3 +100,15 @@ bool Struct::match(Struct &term){
   }
   return false;
 }*/
+
+Iterator<Term *> * Struct::createIterator(){
+  return new StructIterator<Term *>(this);
+}
+
+Iterator<Term *> * Struct::createDFSIterator(){
+  return new DFSIterator<Term *>(this);
+}
+
+Iterator<Term *> * Struct::createBFSIterator(){
+  return new BFSIterator<Term *>(this);
+}

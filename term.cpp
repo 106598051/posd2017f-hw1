@@ -1,5 +1,6 @@
 #include <typeinfo>
 #include "term.h"
+#include "iterator.h"
 #include "variable.h"
 #include "list.h"
 #include "atom.h"
@@ -81,4 +82,8 @@ Term * Term::args(int index) {
   Term * v;
   return v;
   */
+}
+
+Iterator<Term *> * Term::createIterator(){
+  return new NullIterator<Term *>(this);
 }
