@@ -22,13 +22,13 @@ Term::Term(double value){
   _symbol = buffer.str();
 }
 
-string Term::symbol() const{
-  return _symbol;
-};
-
-string Term::value() const{
-  return Term::symbol();
-};
+// string Term::symbol() const{
+//   return _symbol;
+// }
+//
+// string Term::value() const{
+//   return Term::symbol();
+// }
 
 bool Term::match(Term & term) {
   //bool result = false;
@@ -67,22 +67,22 @@ bool Term::match(Term & term) {
   //return result;
 }
 
-std::vector<Term *> Term::getElements(){
-  vector<Term *> v;
-  return v;
-}
+// std::vector<Term *> Term::getElements(){
+//   vector<Term *> v;
+//   return v;
+// }
 
-int Term::arity() const{
-  return 0;
-}
+// int Term::arity() const{
+//   return 0;
+// }
 
-Term * Term::args(int index) {
-  throw string("not available");
-  /*
-  Term * v;
-  return v;
-  */
-}
+// Term * Term::args(int index) {
+//   throw string("not available");
+//   /*
+//   Term * v;
+//   return v;
+//   */
+// }
 
 Iterator<Term *> * Term::createIterator(){
   return new NullIterator<Term *>(this);
