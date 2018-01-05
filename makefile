@@ -1,14 +1,21 @@
-all: hw7
+all: hw8 shell
 
-hw7: mainIterator.o variable.o atom.o number.o struct.o list.o term.o
+hw8: mainShell.o variable.o atom.o number.o struct.o list.o term.o
 ifeq (${OS}, Windows_NT)
-	g++ -o hw7 mainIterator.o variable.o atom.o number.o struct.o list.o term.o -lgtest
+	g++ -o hw8 mainShell.o variable.o atom.o number.o struct.o list.o term.o -lgtest
 else
-	g++ -o hw7 mainIterator.o variable.o atom.o number.o struct.o list.o term.o -lgtest -lpthread
+	g++ -o hw8 mainShell.o variable.o atom.o number.o struct.o list.o term.o -lgtest -lpthread
 endif
 
-mainIterator.o: mainIterator.cpp utIterator.h
-	g++ --std=gnu++0x -c mainIterator.cpp
+shell: shell.o variable.o atom.o number.o struct.o list.o term.o
+ifeq (${OS}, Windows_NT)
+	g++ -o shell shell.o variable.o atom.o number.o struct.o list.o term.o -lgtest
+else
+	g++ -o shell shell.o variable.o atom.o number.o struct.o list.o term.o -lgtest -lpthread
+endif
+
+mainShell.o: mainShell.cpp exception.h expression.h
+	g++ --std=gnu++0x -c mainShell.cpp
 variable.o: variable.cpp variable.h
 	g++ --std=gnu++0x -c variable.cpp
 atom.o: atom.cpp atom.h
@@ -22,9 +29,12 @@ list.o: list.cpp list.h
 term.o: term.cpp term.h
 	g++ --std=gnu++0x -c term.cpp
 
+shell.o: shell.cpp
+	g++ --std=gnu++0x -c shell.cpp
+
 clean:
 ifeq (${OS}, Windows_NT)
 	del *.o *.exe
 else
-	rm -f *.o hw7
+	rm -f *.o hw8
 endif

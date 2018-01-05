@@ -87,3 +87,7 @@ bool Term::match(Term & term) {
 Iterator<Term *> * Term::createIterator(){
   return new NullIterator<Term *>(this);
 }
+
+Variable* Term::getVariable() {
+  return nullptr;
+}

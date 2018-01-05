@@ -12,47 +12,40 @@ using std::vector;
 class Scanner {
 public:
   Scanner (string in=""):buffer(in), pos(0), _tokenValue(NONE){}
-  void setInput(string in) {
-    buffer = in;
-  }
+  void setInput(string in) {buffer = in;}
 
   int nextToken() {
-    //std::cout<<currentChar()<<std::endl;
-    if (skipLeadingWhiteSpace() >= buffer.length())
-      return EOS;
-    else if (isdigit(currentChar())) {
-      _tokenValue = extractNumber();
-      return NUMBER;
-    }  else if (islower(currentChar())) {
-      string s = extractAtom();
-      processToken<ATOM>(s);
-      return ATOM;
-    } else if (isSpecialCh(currentChar())) {
-      string s = extractAtomSC();
-      processToken<ATOMSC>(s);
-      return ATOMSC;
-    } else if (isupper(currentChar()) || currentChar() == '_') {
-      string s = extractVar();
-      processToken<VAR>(s);
-      return VAR;
-    } else {
-      _tokenValue = NONE;
-      return extractChar();
-    }
+      if (skipLeadingWhiteSpace() >= buffer.length())
+        return EOS;
+      else if (isdigit(currentChar())) {
+        _tokenValue = extractNumber();
+        return NUMBER;
+      }  else if (islower(currentChar())) {
+        string s = extractAtom();
+        processToken<ATOM>(s);
+        return ATOM;
+      } else if (isSpecialCh(currentChar()) && position() < buffer.length() - 1) {
+        string s = extractAtomSC();
+        processToken<ATOMSC>(s);
+        return ATOMSC;
+      } else if (isupper(currentChar()) || currentChar() == '_') {
+        string s = extractVar();
+        processToken<VAR>(s);
+        return VAR;
+      } else {
+        _tokenValue = NONE;
+        return extractChar();
+      }
   }
 
-  int tokenValue() const {
-    return _tokenValue;
-  }
+  int tokenValue() const {return _tokenValue;}
 
   int skipLeadingWhiteSpace() {
     for (; (buffer[pos] == ' ' || buffer[pos] == '\t') && pos<buffer.length(); ++pos);
     return position();
   }
 
-  int position() const {
-    return pos;
-  }
+  int position() const {return pos;}
 
   char currentChar() {
     return buffer[pos];
@@ -67,7 +60,7 @@ public:
 
   string extractAtom() {
     int posBegin = position();
-    for (;isalnum(buffer[pos]); ++pos);
+    for (;isalnum(buffer[pos]) || buffer[pos] == '_'; ++pos);
     return buffer.substr(posBegin, pos-posBegin);
   }
 

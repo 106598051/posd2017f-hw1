@@ -22,3 +22,7 @@ bool Variable::match( Term & term ) {
   }
   return _content->match(term);
 }
+
+Variable* Variable::getVariable() {
+  return this;
+}

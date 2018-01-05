@@ -8,6 +8,8 @@
 //#include "iterator.h"
 
 using namespace std;
+
+class Variable;
 template<class T>class Iterator;
 class Term{
 public:
@@ -26,6 +28,7 @@ public:
   // }
   // virtual Term * args(int index);
   // virtual Iterator<Term *> * createIterator();
+  virtual Variable* getVariable();
 
 protected:
   Term();

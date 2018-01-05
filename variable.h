@@ -11,6 +11,7 @@ public:
   Variable(string s);
   string value() const;
   bool match(Term& term);
+  Variable* getVariable();
 
 private:
   Term *_content;

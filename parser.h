@@ -1,8 +1,10 @@
 #ifndef PARSER_H
 #define PARSER_H
 #include <string>
+#include <map>
+// #include <iostream>
 using std::string;
-//#include <iostream>
+using namespace std;
 
 #include "atom.h"
 #include "variable.h"
@@ -11,94 +13,30 @@ using std::string;
 #include "struct.h"
 #include "number.h"
 #include "list.h"
+#include "exp.h"
 #include "node.h"
-#include "utParser.h"
+#include <stack>
+
+using std::stack;
 
 class Parser{
 public:
-  Parser(Scanner scanner) : _scanner(scanner), _terms(){}
-
-  // Term* createTerm(){
-  //   int token = _scanner.nextToken();
-  //   //std::cout<<"token(createTerm)="<<token<<std::endl;
-  //   if(token == VAR){
-  //     //std::cout<<"return Variable"<<std::endl;
-  //     return new Variable(symtable[_scanner.tokenValue()].first);
-  //   }
-  //   else if(token == NUMBER){
-  //     //std::cout<<"return Number"<<std::endl;
-  //     return new Number(_scanner.tokenValue());
-  //   }
-  //   else if(token == ATOM){
-  //     Atom* atom = new Atom(symtable[_scanner.tokenValue()].first);
-  //     if(_scanner.currentChar() == '(' ) {
-  //       //std::cout<<"In Struct process"<<std::endl;
-  //       _scanner.nextToken();
-  //       vector<Term*> terms = getArgs();
-  //       if(_currentToken == ')'){
-  //         //std::cout<<"return Struct"<<std::endl;
-  //         return new Struct(*atom, terms);
-  //       }
-  //       else{
-  //         //Atom* unexpected = new Atom("unexpected token");
-  //         //return unexpected;
-  //         throw string("unexpected token");
-  //       }
-  //     }
-  //     else {
-  //       //std::cout<<"return Atom"<<std::endl;
-  //       return atom;
-  //     }
-  //   }
-  //   else if(token == ATOMSC){
-  //     Atom* atom = new Atom(symtable[_scanner.tokenValue()].first);
-  //     if(_scanner.currentChar() == '(' ) {
-  //       //std::cout<<"In Struct process"<<std::endl;
-  //       _scanner.nextToken();
-  //       vector<Term*> terms = getArgs();
-  //       if(_currentToken == ')'){
-  //         //std::cout<<"return Struct"<<std::endl;
-  //         return new Struct(*atom, terms);
-  //       }
-  //       else{
-  //         //Atom* unexpected = new Atom("unexpected token");
-  //         //return unexpected;
-  //         throw string("unexpected token");
-  //       }
-  //     }
-  //     else {
-  //       //std::cout<<"return Atom"<<std::endl;
-  //       return atom;
-  //     }
-  //   }
-  //   else if ((char)token == ')'){
-  //     _currentToken = token;
-  //   }
-  //   else if((char)token == '['){
-  //     //std::cout<<"In list process"<<std::endl;
-  //     vector<Term *> elements = getArgs();
-  //     //std::cout<<"elements.size()="<<elements.size()<<std::endl;
-  //     if(_currentToken == ']'){
-  //       return new List(elements);
-  //     }
-  //     else{
-  //       //Atom* unexpected = new Atom("unexpected token");
-  //       //return unexpected;
-  //       throw string("unexpected token");
-  //     }
-  //   }
-  //   else if ((char)token == ']'){
-  //     _currentToken = token;
-  //   }
-  //   return nullptr;
-  // }
-
+  Parser(Scanner scanner) : _scanner(scanner), _terms() {}
 
   Term* createTerm(){
     int token = _scanner.nextToken();
     _currentToken = token;
     if(token == VAR){
-      return new Variable(symtable[_scanner.tokenValue()].first);
+      l_it = _mapv.find(symtable[_scanner.tokenValue()].first);
+      if(l_it==_mapv.end()){
+        Variable * v =new Variable(symtable[_scanner.tokenValue()].first);
+        _mapv.insert(std::pair<string,Variable*>(symtable[_scanner.tokenValue()].first,v));
+        return v;
+      }
+      else
+        return l_it->second;
+
+
     }else if(token == NUMBER){
       return new Number(_scanner.tokenValue());
     }else if(token == ATOM || token == ATOMSC){
@@ -117,48 +55,20 @@ public:
 
 
 
-  vector<Term*> getArgs()
-  {
-    //std::cout<<"In getArgs process"<<std::endl;
-    Term* term = createTerm();
-    vector<Term*> args;
-    if(term){
-      args.push_back(term);
-
-      while((_currentToken = _scanner.nextToken()) == ',') {
-        args.push_back(createTerm());
-      }
-    }
-    //std::cout<<"_currentToken="<<_currentToken<<std::endl;
-    return args;
-  }
-
-
-  Term* structure(){
-    Atom structureName(symtable[_scanner.tokenValue()].first);
-    int startIndexOfStructure = _terms.size();
+  Term * structure() {
+    Atom structName = Atom(symtable[_scanner.tokenValue()].first);
+    int startIndexOfStructArgs = _terms.size();
     _scanner.nextToken();
     createTerms();
-    if(_currentToken == ')'){
-      vector<Term *> args(_terms.begin() + startIndexOfStructure, _terms.end());
-      return new Struct(structureName, args);
-    }
-    else {
-      throw string("unexpected token");
+    if(_currentToken == ')')
+    {
+      vector<Term *> args(_terms.begin() + startIndexOfStructArgs, _terms.end());
+      _terms.erase(_terms.begin() + startIndexOfStructArgs, _terms.end());
+      return new Struct(structName, args);
+    } else {
+      throw string("Unbalanced operator");
     }
   }
-
-  // Term* list(){
-  //   int startIndexOfList = _terms.size();
-  //   if(_currentToken == ']'){
-  //     vector<Term *> elements(_terms.begin() + startIndexOfList, _terms.end());
-  //     _terms.erase(_terms.begin() + startIndexOfList, _terms.end());
-  //     return new List(elements);
-  //   }
-  //   else {
-  //     throw string("unexpected token");
-  //   }
-  // }
 
   Term * list() {
     int startIndexOfListArgs = _terms.size();
@@ -167,103 +77,132 @@ public:
     {
       vector<Term *> args(_terms.begin() + startIndexOfListArgs, _terms.end());
       _terms.erase(_terms.begin() + startIndexOfListArgs, _terms.end());
+      if(args.size()==0){
+        return new Atom("[]");
+      }
       return new List(args);
     } else {
-      throw string("unexpected token");
+      throw string("Unbalanced operator");
     }
   }
 
-  vector<Term *> &getTerms(){
+  vector<Term *> & getTerms() {
     return _terms;
   }
 
-  void matchings(){
-    Term *term = createTerm();
-    if(term != nullptr){
-      if(isCOMMA){
-        Term *findTerm = find(term);
-        if(findTerm != nullptr){
-          term->match(*findTerm);
-        }
-      }
-      _terms.push_back(term);
-      while((_currentToken = _scanner.nextToken()) == ','
-      || _currentToken == '='
-      || _currentToken == ';'){
-        if (_currentToken == '=') {
-          isCOMMA = false;
-          Node *left = new Node(TERM, _terms.back(), nullptr, nullptr);
-          _terms.push_back(createTerm());
-          Node *right = new Node(TERM, _terms.back(), nullptr, nullptr);
-          Node *root = new Node(EQUALITY, nullptr, left, right);
-          _expressionTree = root;
-        } else if (_currentToken == ',') {
-          isCOMMA = true;
-          Node *left = _expressionTree;
-          matchings();
-          Node *root = new Node(COMMA, nullptr, left, expressionTree());
-          _expressionTree = root;
-        } else if (_currentToken == ';') {
-          isCOMMA = false;
-          Node *left = _expressionTree;
-          matchings();
-          Node *root = new Node(SEMICOLON, nullptr, left, expressionTree());
-          _expressionTree = root;
-        }
-      }
+  // void buildExpression(){
+  //   // createTerm();
+  //   disjunctionMatch();
+  //   restDisjunctionMatch();
+  //   Term * temp = createTerm();
+  //   if (createTerm() != nullptr || _currentToken != '.')
+  //     throw string("Missing token '.'");
+  // }
+  Exp *buildExpression()
+  {
+    // if (!_scanner.getCase().find(";.")){
+    //   throw string("Unexpected ';' before '.'");
+    // }
+    // if (!_scanner.getCase().find(",.")){
+    //   throw string("Unexpected ',' before '.'");
+    // }
+    disjunctionMatch();
+    restDisjunctionMatch();
+    Term * temp = createTerm();
+    if ( temp != nullptr || _currentToken != '.') {
+      throw string("Missing token '.'");
+    }
+    return _expStack.top();
+  }
+
+  void restDisjunctionMatch() {
+    if (_scanner.currentChar() == ';') {
+      createTerm();
+      if(_scanner.currentChar() == '.')
+       throw string("Unexpected ';' before '.'");
+      disjunctionMatch();
+      Exp *right = _expStack.top();
+      _expStack.pop();
+      Exp *left = _expStack.top();
+      _expStack.pop();
+      _expStack.push(new DisjExp(left, right));
+      restDisjunctionMatch();
+    }
+
+  }
+
+  void disjunctionMatch() {
+    conjunctionMatch();
+    restConjunctionMatch();
+  }
+
+  void restConjunctionMatch() {
+    if (_scanner.currentChar() == ',') {
+      createTerm();
+      if(_scanner.currentChar() == '.')
+       throw string("Unexpected ',' before '.'");
+      conjunctionMatch();
+      Exp *right = _expStack.top();
+      _expStack.pop();
+      Exp *left = _expStack.top();
+      _expStack.pop();
+      _expStack.push(new ConjExp(left, right));
+      restConjunctionMatch();
     }
   }
 
-  Term *find(Term *term){
-    Term * t = nullptr;
-    for(int index = 0; index < _terms.size(); index++){
-      if(_terms[index]->symbol() == term->symbol()){
-        return _terms[index];
-      }
-      Struct *s = dynamic_cast<Struct *>(_terms[index]);
-      if(s){
-        return findStruct(s, term);
-      }
+  void conjunctionMatch() {
+    Term * left = createTerm();
+    if (createTerm() == nullptr && _currentToken == '=') {
+      Term * right = createTerm();
+      _expStack.push(new MatchExp(left, right));
     }
-    return t;
+    else if(_currentToken == ';' && _scanner.currentChar()== '.'){
+      throw string("Unexpected ';' before '.'");
+    }
+    else if(_currentToken == ',' && _scanner.currentChar()== '.'){
+      throw string("Unexpected ',' before '.'");
+    }
+    else if(_currentToken == '.'){
+      string msg = left->symbol() + " does never get assignment" ;
+      throw string(msg);
+    }
+
   }
 
-  Term *findStruct(Struct *s, Term *term){
-    for (int index = 0; index < s->arity(); index++) {
-      if (s->args(index)->symbol() == term->symbol()) {
-        return s->args(index);
-      }
-      Struct *structure = dynamic_cast<Struct *>(s->args(index));
-      if (structure) {
-        return findStruct(structure, term);
-      }
-    }
+  Exp* getExpressionTree(){
+    return _expStack.top();
   }
 
-  Node *expressionTree(){
-    return _expressionTree;
+  string getExpressionResult(){
+    return _expStack.top()->getExpressionResult() + ".";
   }
 
 private:
   FRIEND_TEST(ParserTest, createArgs);
-  FRIEND_TEST(ParserTest, ListOfTermsEmpty);
-  FRIEND_TEST(ParserTest, listofTermsTwoNumber);
+  FRIEND_TEST(ParserTest,ListOfTermsEmpty);
+  FRIEND_TEST(ParserTest,listofTermsTwoNumber);
   FRIEND_TEST(ParserTest, createTerm_nestedStruct3);
+  FRIEND_TEST(ParserTest, createTerms);
 
-  void createTerms(){
-    Term * term = createTerm();
-    if(term != nullptr){
+  void createTerms() {
+    Term* term = createTerm();
+    if(term!=nullptr)
+    {
       _terms.push_back(term);
-      while ((_currentToken = _scanner.nextToken()) == ',') {
+      while((_currentToken = _scanner.nextToken()) == ',') {
         _terms.push_back(createTerm());
       }
     }
   }
 
+  map<string,Variable*> _mapv;
+  map<string,Variable*>::iterator l_it;
+
+  vector<Term *> _terms;
   Scanner _scanner;
   int _currentToken;
-  std::vector<Term *> _terms;
-  Node * _expressionTree;
-  bool isCOMMA = false;
+  //MatchExp* _root;
+  stack<Exp*> _expStack;
 };
 #endif
